@@ -1,0 +1,3 @@
+#!/bin/bash
+
+find "scss/" -maxdepth 1 -name "*.scss" -type f -exec sh -c 'scss --style compressed --default-encoding UTF-8 "{}" css/$(basename "{}" ".scss").css' \;

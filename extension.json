@@ -1,0 +1,35 @@
+{
+	"namemsg": "plushiehorse-extensionname",
+	"author": "[[User:CorpulentBrony|Corpulent Brony]]",
+	"version": "1.0.0",
+	"url": "https://plushie.horse/content/Extension:PlushieHorse",
+	"descriptionmsg": "plushiehorse-desc",
+	"license-name": "CC-BY-NC-4.0",
+	"type": "parserhook",
+	"requires": {
+		"MediaWiki": ">= 1.29.0"
+	},
+	"AutoloadClasses": {
+		"PlushieHorse": "PlushieHorse.class.php"
+	},
+	"MessagesDirs": {
+		"PlushieHorse": [
+			"i18n"
+		]
+	},
+	"ExtensionMessagesFiles": {
+		"PlushieHorseMagic": "PlushieHorse.i18n.magic.php"
+	},
+	"Hooks": {
+		"ParserFirstCallInit": [
+			"PlushieHorse::init"
+		],
+		"OutputPageBeforeHTML": [
+			"PlushieHorse::onOutputPageBeforeHTML"
+		],
+		"BeforePageDisplay": [
+			"PlushieHorse::onBeforePageDisplay"
+		]
+	},
+	"manifest_version": 1
+}

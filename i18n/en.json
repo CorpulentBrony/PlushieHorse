@@ -1,0 +1,21 @@
+{
+	"@metadata": {
+		"authors": [
+			"CorpulentBrony"
+		]
+	},
+	"plushiehorse-extensionname": "PlushieHorse",
+	"plushiehorse-desc": "Allows for the inclusion of <code>application/ld+json</code> metadata script tags into a page's <code>&lt;head&gt;</code> element",
+	"plushiehorse-error-decoding-value": "$1: Error decoding value: $2.",
+	"plushiehorse-error-hash-mismatch": "$1: For property $2: Hash mistmatch for value \"$3\"; data may have been lost or corrupted.",
+	"plushiehorse-list-separator": ", ",
+	"plushiehorse-list-seperator-final": ", and ",
+	"plushiehorse-list-two-item-conjunction": " and ",
+	"plushiehorse-pic-alt": "A random plushie image from Derpibooru",
+	"plushiehorse-pic-caption": "$1 hosted by $2.",
+	"plushiehorse-pic-caption-artist": "$1 by $2 hosted by $3.",
+	"plushiehorse-pic-caption-artist-source": "$1 by $2 ($3) and hosted by $4.",
+	"plushiehorse-pic-caption-source": "$1 ($2) hosted by $3.",
+	"plushiehorse-pic-caption-word-image": "Image",
+	"plushiehorse-pic-caption-word-source": "source"
+}

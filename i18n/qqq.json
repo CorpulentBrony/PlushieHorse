@@ -1,0 +1,21 @@
+{
+	"@metadata": {
+		"authors": [
+			"CorpulentBrony"
+		]
+	},
+	"plushiehorse-extensionname": "The name of the extension, used on the [Special:Version] page",
+	"plushiehorse-desc": "The description of the extension, used on the [Special:Version] page",
+	"plushiehorse-error-decoding-value": "Error message that appears when there was an error decoding the value from its JSON representation.  Parameters: $1 the context; $2 the data that could not be decoded",
+	"plushiehorse-error-hash-mismatch": "Description of the hash mismatch error.  Parameters: $1 the context; $2 the property name; $3 the value of the property",
+	"plushiehorse-list-separator": "Punctuation to separate items in a list (include a space if needed)",
+	"plushiehorse-list-seperator-final": "The final separator in a list, should include any list separator as well as a conjunction, if needed",
+	"plushiehorse-list-two-item-conjunction": "Joins together a list with two items in it",
+	"plushiehorse-pic-alt": "The text that appears in the <code>alt</code> attribute of the <code>img</code> tag for the plush picture",
+	"plushiehorse-pic-caption": "Captions pics without source or artist.  Parameters: $1 the linked text of plushiehorse-pic-caption-word-image; $2 the name of the source site.",
+	"plushiehorse-pic-caption-artist": "Captions pics with only artist.  Parameters: $1 the linked text of plushiehorse-pic-caption-word-image; $2 the artist(s); $3 the name of the source site.",
+	"plushiehorse-pic-caption-artist-source": "Captions pics with both source and artist.  Parameters: $1 the linked text of plushiehorse-pic-caption-word-image; $2 the artist(s); $3 the linked text of plushiehorse-pic-caption-word-source; $4 the name of the source site.",
+	"plushiehorse-pic-caption-source": "Captions pics with only source.  Parameters: $1 the linked text of plushiehorse-pic-caption-word-image; $2 the linked text of plushiehorse-pic-caption-word-source; $3 the name of the source site.",
+	"plushiehorse-pic-caption-word-image": "Text that links to the image page",
+	"plushiehorse-pic-caption-word-source": "Text that links to the source"
+}

@@ -1,0 +1,2 @@
+# PlushieHorse
+This is a specialized [https://mediawiki.org MediaWiki] extension specifically for the [https://plushie.horse plushie.horse] Web site.  It will probably be of little use outside of that context.

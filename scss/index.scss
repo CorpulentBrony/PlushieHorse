@@ -1,0 +1,178 @@
+@charset "utf-8";
+
+$dropdown-background-color: #f0f0f0;
+$dropdown-background-gradient: linear-gradient(0deg, #e3e3e3, #fcfcfc 50%, $dropdown-background-color);
+$dropdown-border: 0.2em solid black;
+$dropdown-font-size: 0.625em;
+$dropdown-max-height: 60vh;
+$table-background-color: #f8f9fa;
+$table-foreground-color: black;
+$table-width: 80vw;
+$thead-background-color: #eaecf0;
+$widget-box-shadow: 0 0.1em 0.2em rgba(0, 0, 0, 0.45);
+
+@mixin box-sizing($sizing) {
+	-moz-box-sizing: $sizing;
+	box-sizing: $sizing;
+}
+@mixin cursor-pointer { cursor: pointer; }
+@mixin no-margin-padding {
+	margin: 0;
+	padding: 0;
+}
+@mixin table-border { border: 1px solid #a2a9b1; }
+@mixin user-select($select) {
+	-moz-user-select: $select;
+	-webkit-user-select: $select;
+	-ms-user-select: $select;
+	user-select: $select;
+}
+
+table#PlushmancerListOutput {
+	@include table-border;
+	background-color: $table-background-color;
+	border-collapse: collapse;
+	color: $table-foreground-color;
+	page-break-inside: avoid;
+	width: $table-width;
+
+	> thead {
+		background-color: $thead-background-color;
+		text-align: center;
+
+		> tr {
+			&#PlushmancerListOutputFilterRow > td.plushmancer-filter-widget {
+				& > button, & > div[role="listbox"] {
+					background: $dropdown-background-color;
+					background: $dropdown-background-gradient;
+					border: $dropdown-border { radius: 0.4em; }
+					box-shadow: $widget-box-shadow;
+					@include box-sizing(border-box);
+					cursor: default;
+					display: inline-block;
+					font-size: $dropdown-font-size;
+					min-height: 20px;
+					padding: 0.1em 2.5em 0.2em 0.5em;
+					position: relative;
+					-webkit-touch-callout: none;
+					@include user-select(none);
+
+					* { @include cursor-pointer; }
+					&:after {
+						background-color: black;
+						border: {
+							left: $dropdown-border;
+							radius: 0 0.1em 0.1em 0;
+						}
+						@include box-sizing(border-box);
+						color: white;
+						content: "▼";
+						height: 100%;
+						padding-top: 0.1em;
+						position: absolute;
+						right: 0;
+						text-align: center;
+						top: 0;
+						width: 2em;
+						z-index: 1;
+					}
+					&.plushmancer-active, &:focus {
+						box-shadow: 0 0 3px 1px #275;
+						outline: none;
+					}
+					> div {
+						&.plushmancer-dropdown {
+							@include no-margin-padding;
+							background: $dropdown-background-color;
+							border: $dropdown-border {
+								radius: 0 0 0.4em 0.4em;
+								top-width: 0.1em;
+							};
+							box-shadow: 0 0.2em 0.4em rgba(0, 0, 0, 0.4);
+							@include box-sizing(border-box);
+							left: 0;
+							max-height: $dropdown-max-height;
+							min-width: 100%;
+							overflow: hidden;
+							position: absolute;
+							top: 100%;
+							transition: max-height 0.2s ease-out;
+							z-index: 2;
+
+							&[aria-hidden="true"] {
+								max-height: 0;
+								visibility: hidden;
+							}
+
+							> menu, > ul {
+								@include no-margin-padding;
+								list-style: none;
+								max-height: $dropdown-max-height;
+								overflow: {
+									x: hidden;
+									y: auto;
+								}
+								text-align: left;
+
+								> li {
+									padding: 0.2em 0.3em;
+									transition: background 0.2s ease-out, color 0.2s ease-out;
+
+									&[aria-current="true"] {
+										background: black;
+										color: white;
+									}
+
+									> label > input {
+										@include no-margin-padding;
+										position: relative;
+										top: 3.4px;
+										transform: scale(0.8);
+									}
+								}
+							}
+						}
+					}
+					> output {
+						display: inline-block;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						vertical-align: top;
+						white-space: nowrap;
+						width: 100%;
+					}
+				}
+				& > div.plushmancer-sorters > span[role="radio"] {
+							@include cursor-pointer;
+							box-shadow: $widget-box-shadow;
+							color: lightgray;
+							-webkit-touch-callout: none;
+							@include user-select(none);
+
+							&[aria-checked="true"] { color: black; }
+				}
+			}
+			> th, > td {
+				border: {
+					color: inherit;
+					style: none solid;
+					width: 0 1px;
+				}
+			}
+			> th { font-weight: bold; }
+			> td { padding-bottom: 0.4em; }
+		}
+	}
+	> tbody > tr {
+		&[aria-hidden="true"] { @extend .invisible; }
+		> td {
+			@include table-border;
+			padding: 0.2em;
+		}
+	}
+	.invisible, & + output.invisible {
+		position: absolute;
+		top: -9999em;
+		left: -9999em;
+	}
+}
