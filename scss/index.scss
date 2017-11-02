@@ -27,7 +27,14 @@ $widget-box-shadow: 0 0.1em 0.2em rgba(0, 0, 0, 0.45);
 	-ms-user-select: $select;
 	user-select: $select;
 }
-
+html.client-nojs table#PlushmancerListOutput > tbody > tr > th {
+	border: {
+		color: inherit;
+		style: none solid;
+		width: 0 1px;
+	}
+	font-weight: bold;
+}
 table#PlushmancerListOutput {
 	@include table-border;
 	background-color: $table-background-color;

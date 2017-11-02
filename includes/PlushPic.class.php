@@ -65,9 +65,18 @@
 				"srcset" => $this->getSrcset()
 			]);
 			$result = Html::rawElement("picture", [], $result);
-			$result = Html::rawElement("a", ["href" => $imageUrl, "rel" => "external"], $this->parser->insertStripItem($result)) . PHP_EOL;
-			$result .= Html::rawElement("div", ["id" => self::IMAGE_CAPTION_ID], $this->getCaptionHtml()) . PHP_EOL;
-			return $result;
+			$result = Html::rawElement("a", ["href" => $imageUrl, "itemprop" => "url", "rel" => "external"], $result);
+			$result .= Html::rawElement("meta", ["content" => "visual", "itemprop" => "accessMode"]);
+			$result .= Html::rawElement("meta", ["content" => "visual", "itemprop" => "accessModeSufficient"]);
+			$result .= Html::rawElement("meta", ["content" => wfMessage("plushiehorse-pic-alt")->inContentLanguage()->plain(), "itemprop" => "caption"]);
+			$result .= Html::rawElement("link", ["href" => $this->image->representation, "itemprop" => "contentUrl"]);
+			$result .= Html::rawElement("meta", ["content" => pathinfo($this->image->representation, PATHINFO_EXTENSION), "itemprop" => "encodingFormat"]);
+			$result .= Html::rawElement("meta", ["content" => $this->image->mime_type, "itemprop" => "fileFormat"]);
+			$result .= Html::rawElement("link", ["href" => $this->image->thumbnail, "itemprop" => "thumbnail"]);
+			$result .= Html::rawElement("link", ["href" => $this->image->thumbnail, "itemprop" => "thumbnailUrl"]);
+			$result .= Html::rawElement("figcaption", ["id" => self::IMAGE_CAPTION_ID], $this->getCaptionHtml());
+			$result = Html::rawElement("figure", ["itemscope" => true, "itemtype" => "https://schema.org/ImageObject"], $result);
+			return $this->parser->insertStripItem($result);
 		}
 
 		private function fetchColor() {
@@ -145,12 +154,20 @@
 		private function getCaptionHtml(): string {
 			if (!isset($this->image))
 				return "";
-			$derpibooru = Html::rawElement("a", ["href" => self::DERPIBOORU_TOP_URL, "rel" => "external", "target" => "_blank"], "Derpibooru");
+			$derpibooru = Html::rawElement("span", ["itemprop" => "name"], "Derpibooru");
+			$derpibooru = Html::rawElement("a", ["href" => self::DERPIBOORU_TOP_URL, "itemprop" => "url", "rel" => "external", "target" => "_blank"], $derpibooru);
+			$derpibooru = Html::rawElement("span", ["itemprop" => "publisher", "itemscope" => true, "itemtype" => "https://schema.org/Organization"], $derpibooru);
 			$hasArtist = isset($this->image->artist);
 			$hasSource = !empty($this->image->source_url);
-			$image = Html::rawElement("a", ["href" => self::DERPIBOORU_TOP_URL . "/" . ($this->image->id ?? ""), "rel" => "external", "target" => "_blank"], wfMessage("plushiehorse-pic-caption-word-image")->inContentLanguage()->plain());
+			$artist = null;
+			$image = Html::rawElement("a", ["href" => self::DERPIBOORU_TOP_URL . "/" . ($this->image->id ?? ""), "itemprop" => "sameAs", "rel" => "external", "target" => "_blank"], wfMessage("plushiehorse-pic-caption-word-image")->inContentLanguage()->plain());
 			$messageArgs = [];
 			$source = null;
+
+			if ($hasArtist) {
+				$artist = Html::rawElement("span", ["itemprop" => "name"], $this->image->artist);
+				$artist = Html::rawElement("span", ["itemprop" => "author", "itemscope" => true, "itemtype" => "https://schema.org/Person"], $artist);
+			}
 
 			if ($hasSource) {
 				$source = filter_var($this->image->source_url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED | FILTER_FLAG_SCHEME_REQUIRED);
@@ -159,13 +176,13 @@
 					$hasSource = false;
 					$source = null;
 				} else
-					$source = Html::rawElement("a", ["href" => $source, "rel" => "cite external", "target" => "_blank"], wfMessage("plushiehorse-pic-caption-word-source")->inContentLanguage()->plain());
+					$source = Html::rawElement("a", ["href" => $source, "itemprop" => "sameAs", "rel" => "cite external", "target" => "_blank"], wfMessage("plushiehorse-pic-caption-word-source")->inContentLanguage()->plain());
 			}
 
 			if ($hasArtist && $hasSource)
-				$messageArgs = ["plushiehorse-pic-caption-artist-source", $image, $this->image->artist, $source, $derpibooru];
+				$messageArgs = ["plushiehorse-pic-caption-artist-source", $image, $artist, $source, $derpibooru];
 			else if ($hasArtist)
-				$messageArgs = ["plushiehorse-pic-caption-artist", $image, $this->image->artist, $derpibooru];
+				$messageArgs = ["plushiehorse-pic-caption-artist", $image, $artist, $derpibooru];
 			else if ($hasSource)
 				$messageArgs = ["plushiehorse-pic-caption-source", $image, $source, $derpibooru];
 			else
