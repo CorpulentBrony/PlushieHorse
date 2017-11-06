@@ -17,5 +17,9 @@
 	"plushiehorse-pic-caption-artist-source": "Captions pics with both source and artist.  Parameters: $1 the linked text of plushiehorse-pic-caption-word-image; $2 the artist(s); $3 the linked text of plushiehorse-pic-caption-word-source; $4 the name of the source site.",
 	"plushiehorse-pic-caption-source": "Captions pics with only source.  Parameters: $1 the linked text of plushiehorse-pic-caption-word-image; $2 the linked text of plushiehorse-pic-caption-word-source; $3 the name of the source site.",
 	"plushiehorse-pic-caption-word-image": "Text that links to the image page",
-	"plushiehorse-pic-caption-word-source": "Text that links to the source"
+	"plushiehorse-pic-caption-word-source": "Text that links to the source",
+	"plushiehorse-seo-description": "The common description field as leveraged in various SEO tags.  Parameters: $1 is the name of the plushmancer and $2 is the name of the site (Plushe.Horse)",
+	"plushiehorse-seo-image-alt-text": "The alternate text shown when displaying an example of the plushmancer's work.  Parameter: $1 is the name of the plushmancer",
+	"plushiehorse-seo-keywords": "A comma separated list of keywords used for SEO.  Parameter: $1 is the name of the plushmancer (and should probably be kept in the first position)",
+	"plushiehorse-seo-page-title": "Short title to be displayed in SEO tags.  Parameters: $1 is the name of the plushmancer and $2 is the name of the site (Plushe.Horse)"
 }

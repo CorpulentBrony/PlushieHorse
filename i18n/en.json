@@ -17,5 +17,9 @@
 	"plushiehorse-pic-caption-artist-source": "$1 by $2 ($3) and hosted by $4.",
 	"plushiehorse-pic-caption-source": "$1 ($2) hosted by $3.",
 	"plushiehorse-pic-caption-word-image": "Image",
-	"plushiehorse-pic-caption-word-source": "source"
+	"plushiehorse-pic-caption-word-source": "source",
+	"plushiehorse-seo-description": "The work of pony plush maker $1 as featured on $2, including prices, features, and sizes offered.",
+	"plushiehorse-seo-image-alt-text": "An example image of a plush made by $1.",
+	"plushiehorse-seo-keywords": "$1,plushie,horse,pony,mlp,artist,plush maker,plushmancer,brony",
+	"plushiehorse-seo-page-title": "$1 on $2"
 }
