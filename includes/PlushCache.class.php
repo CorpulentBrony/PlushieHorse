@@ -12,8 +12,8 @@
 		}
 
 		protected function __get(string $property) {
-			if ($property === "iterator")
-				return new \APCUIterator("/^{$this->prefix}/", APC_ITER_VALUE);
+			// if ($property === "iterator")
+			// 	return new \APCUIterator("/^{$this->prefix}/", APC_ITER_VALUE);
 			return null;
 		}
 
@@ -27,7 +27,9 @@
 			}
 		}
 
+		public function exists(string $key): bool { return apcu_exists($this->prefix . $key); }
 		public function fetch(string $key) { return apcu_fetch($this->prefix . $key); }
 		public function store(string $key, $value) { apcu_store($this->prefix . $key, $value, $this->ttlSeconds); }
+		public function tryFetch(string $key, callable $generator) { return apcu_entry($this->prefix . $key, $generator, $this->ttlSeconds); }
 	}
 ?>

@@ -6,7 +6,7 @@
 		private const DIR = __DIR__ . "/";
 		private const DIR_INCLUDES = self::DIR . "includes/";
 		private const HTML_DIR = "/extensions/PlushieHorse/";
-		private static $PARSER_FUNCTIONS = ["first_rev", "image_info", "plushmancer_list", "plush_pic", "randomly_do", "script_ld_json"];
+		private static $PARSER_FUNCTIONS = ["first_rev", "image_info", "plushmancer_list", "plushmancer_seo", "plush_pic", "randomly_do", "script_ld_json"];
 		/**
 		 * @var \Ds\Set
 		 */
@@ -112,6 +112,27 @@
 				return [$encoded, "noparse" => true, "isHTML" => true];
 			}
 			return ["Sorry, can only fetch a plush pic on the [Plushmancer List] page", "noparse" => false, "isHTML" => false];
+		}
+
+		public static function parse_plushmancer_seo(Parser $parser, string $imageTitle): array {
+			require_once self::DIR_INCLUDES . "PlushFile.class.php";
+			$imageFile = new PlushFile($imageTitle);
+			$imageHeight = $imageFile->getHeight();
+			$imageMimeType = $imageFile->getMimeType();
+			$imageUrl = $imageFile->getUrl();
+			$imageWidth = $imageFile->getWidth();
+			$siteName = $parser->getVariableValue("sitename");
+			$title = $parser->getTitle();
+			$currentRevision = $parser->fetchCurrentRevisionOfTitle($title);
+			$currentRevisionTimestamp = new \DateTime($currentRevision->getTimestamp()); // $currentRevisionTimestamp->format(\DateTime::W3C)
+			$currentRevisionUser = User::newFromId($currentRevision->getUser());
+			$currentRevisionUserUrl = $currentRevisionUser->getUserPage()->getCanonicalURL();
+			$firstRevision = $title->getFirstRevision();
+			$firstRevisionTimestamp = new \DateTime($firstRevision->getTimestamp()); // $firstRevisionTimestamp->format(\DateTime::W3C)
+			$firstRevisionUser = User::newFromId($firstRevision->getUser());
+			$firstRevisionUserUrl = $firstRevisionUser->getUserPage()->getCanonicalURL();
+			$pageName = $title->getText();
+			return ["plushmancer seo", "noparse" => true, "isHTML" => true];
 		}
 
 		public static function parse_randomly_do(Parser $parser, string $text, string $probabilityString = "0.5"): array {

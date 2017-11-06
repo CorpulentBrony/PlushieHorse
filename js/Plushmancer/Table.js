@@ -1,4 +1,5 @@
 "use strict";
+// check out https://dequeuniversity.com/library/aria/tables/sf-sortable-grid
 Plushie.addClassToNamespace(Plushie.Plushmancer, "Table", class Table {
 	constructor() {
 		Plushie.Utils.definePrivateProperties(

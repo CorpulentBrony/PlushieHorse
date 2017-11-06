@@ -5,7 +5,7 @@
 		]
 	},
 	"plushiehorse-extensionname": "PlushieHorse",
-	"plushiehorse-desc": "Allows for the inclusion of <code>application/ld+json</code> metadata script tags into a page's <code>&lt;head&gt;</code> element",
+	"plushiehorse-desc": "This is a specialized extension specifically for the [https://plushie.horse plushie.horse] Web site. It will probably be of little use outside of that context.  Code repository [https://github.com/CorpulentBrony/PlushieHorse on GitHub].",
 	"plushiehorse-error-decoding-value": "$1: Error decoding value: $2.",
 	"plushiehorse-error-hash-mismatch": "$1: For property $2: Hash mistmatch for value \"$3\"; data may have been lost or corrupted.",
 	"plushiehorse-list-separator": ", ",

@@ -62,10 +62,11 @@
 				"longdesc" => self::DERPIBOORU_TOP_URL . "/" . ($this->image->id ?? ""), 
 				"sizes" => "64vw",
 				"src" => $imageUrl,
-				"srcset" => $this->getSrcset()
+				"srcset" => $this->getSrcset(),
+				"style" => "background-color: {$this->image->color};"
 			]);
 			$result = Html::rawElement("picture", [], $result);
-			$result = Html::rawElement("a", ["href" => $imageUrl, "itemprop" => "url", "rel" => "external"], $result);
+			$result = Html::rawElement("a", ["href" => $imageUrl, "itemprop" => "url", "rel" => "external", "target" => "_blank"], $result);
 			$result .= Html::rawElement("meta", ["content" => "visual", "itemprop" => "accessMode"]);
 			$result .= Html::rawElement("meta", ["content" => "visual", "itemprop" => "accessModeSufficient"]);
 			$result .= Html::rawElement("meta", ["content" => wfMessage("plushiehorse-pic-alt")->inContentLanguage()->plain(), "itemprop" => "caption"]);

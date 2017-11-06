@@ -27,14 +27,7 @@ $widget-box-shadow: 0 0.1em 0.2em rgba(0, 0, 0, 0.45);
 	-ms-user-select: $select;
 	user-select: $select;
 }
-html.client-nojs table#PlushmancerListOutput > tbody > tr > th {
-	border: {
-		color: inherit;
-		style: none solid;
-		width: 0 1px;
-	}
-	font-weight: bold;
-}
+
 table#PlushmancerListOutput {
 	@include table-border;
 	background-color: $table-background-color;
@@ -48,8 +41,8 @@ table#PlushmancerListOutput {
 		text-align: center;
 
 		> tr {
-			&#PlushmancerListOutputFilterRow > td.plushmancer-filter-widget {
-				& > button, & > div[role="listbox"] {
+			&#PlushmancerListOutputFilterRow > td.plushmancer-filter-widget > div {
+				&[role="listbox"] {
 					background: $dropdown-background-color;
 					background: $dropdown-background-gradient;
 					border: $dropdown-border { radius: 0.4em; }
@@ -58,7 +51,6 @@ table#PlushmancerListOutput {
 					cursor: default;
 					display: inline-block;
 					font-size: $dropdown-font-size;
-					min-height: 20px;
 					padding: 0.1em 2.5em 0.2em 0.5em;
 					position: relative;
 					-webkit-touch-callout: none;
@@ -111,7 +103,7 @@ table#PlushmancerListOutput {
 								visibility: hidden;
 							}
 
-							> menu, > ul {
+							> menu {
 								@include no-margin-padding;
 								list-style: none;
 								max-height: $dropdown-max-height;
@@ -149,7 +141,7 @@ table#PlushmancerListOutput {
 						width: 100%;
 					}
 				}
-				& > div.plushmancer-sorters > span[role="radio"] {
+				&.plushmancer-sorters > span[role="radio"] {
 							@include cursor-pointer;
 							box-shadow: $widget-box-shadow;
 							color: lightgray;

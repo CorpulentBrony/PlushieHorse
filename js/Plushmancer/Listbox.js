@@ -12,26 +12,19 @@ Plushie.addClassToNamespace(Plushie.Plushmancer, "Listbox", class Listbox extend
 
 	get dropdown() { 
 		return Plushie.Utils.getPrivateProperty(this, "dropdown", () => {
-			const dropdown = Plushie.Utils.createElement("div", { ["aria-hidden"]: true, id: this.dropdownId, class: "plushmancer-dropdown" });
-			this.options.list.setAttribute("id", this.menuId);
+			const dropdown = Plushie.Utils.createElement("div", { ["aria-hidden"]: true, id: this.id, class: "plushmancer-dropdown" });
 			dropdown.appendChild(this.options.list);
 			return dropdown;
 		});
 	}
 
-	get dropdownId() { return `dropdown-${this.id}`; }
-	get id() { return Plushie.Utils.getPrivateProperty(this, "id", () => Plushie.Utils.generateRandomId()); }
+	get id() { return Plushie.Utils.getPrivateProperty(this, "id", () => Plushie.Utils.generateRandomId("dropdown")); }
 	get isFocused() { return this.listbox.classList.contains("plushmancer-active"); }
 	get isOpen() { return this.dropdown.getAttribute("aria-hidden") !== "true"; }
+	get outputText() { return this.output.title; }
 
 	get listbox() {
 		return Plushie.Utils.getPrivateProperty(this, "listbox", () => {
-			// let listbox;
-
-			// if (window.HTMLMenuItemElement && !("menu" in window.document.createElement("button")))
-			// 	listbox = Plushie.Utils.createElement("div", { ["aria-controls"]: "PlushmancerListOutput", ["aria-multiselectable"]: true, role: "listbox", tabindex: 0 });
-			// else
-			// 	listbox = Plushie.Utils.createElement("button", { ["aria-controls"]: "PlushmancerListOutput", ["aria-multiselectable"]: true, menu: this.menuId, role: "listbox", type: "menu" });
 			const listbox = Plushie.Utils.createElement("div", { ["aria-controls"]: "PlushmancerListOutput", ["aria-multiselectable"]: true, role: "listbox", tabindex: 0 });
 			listbox.appendChild(this.output);
 			listbox.appendChild(this.dropdown);
@@ -43,8 +36,6 @@ Plushie.addClassToNamespace(Plushie.Plushmancer, "Listbox", class Listbox extend
 		});
 	}
 
-	get menuId() { return `menu-${this.id}`; }
-
 	get options() {
 		return Plushie.Utils.getPrivateProperty(this, "options", () => {
 			const options = new Listbox.OptionCollection(this.values);
@@ -54,8 +45,7 @@ Plushie.addClassToNamespace(Plushie.Plushmancer, "Listbox", class Listbox extend
 		});
 	}
 
-	get output() { return Plushie.Utils.getPrivateProperty(this, "output", () => Plushie.Utils.createElement("output", { ["aria-haspopup"]: true, ["aria-live"]: "polite", for: this.dropdownId })); }
-	get outputText() { return this.output.title; }
+	get output() { return Plushie.Utils.getPrivateProperty(this, "output", () => Plushie.Utils.createElement("output", { ["aria-haspopup"]: true, ["aria-live"]: "polite", for: this.id })); }
 	get typeAheadBuffer() { return Plushie.Utils.getPrivateProperty(this, "typeAheadBuffer", () => new Plushie.TypeAheadBuffer()); }
 	get value() { return this.listbox; }
 	get width() { return this.listbox.offsetWidth; }

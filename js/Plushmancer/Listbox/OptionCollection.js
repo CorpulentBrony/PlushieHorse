@@ -24,7 +24,7 @@ Plushie.checkForNamespace(Plushie.Plushmancer, "Listbox").OptionCollection = cla
 	get highlighted() { return this[this.highlightedIndex]; }
 	get highlightedIndex() { return this._highlightedIndex; }
 	get lastSelected() { return this._lastSelected; }
-	get list() { return Plushie.Utils.getPrivateProperty(this, "list", () => Plushie.Utils.createElement("menu", { role: "presentation" })); }
+	get list() { return Plushie.Utils.getPrivateProperty(this, "list", () => Plushie.Utils.createElement("menu", { role: "presentation", type: "toolbar" })); }
 	get names() { return super.map((option) => option.text); }
 	get selectElement() { return Plushie.Utils.getPrivateProperty(this, "selectElement", () => Plushie.Utils.createElement("select", { ["aria-hidden"]: true, class: "invisible", multiple: true, tabindex: -1 })); }
 	get selected() { return super.filter((option) => option.isSelected); }

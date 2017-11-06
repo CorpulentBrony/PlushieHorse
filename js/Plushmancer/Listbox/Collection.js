@@ -15,7 +15,6 @@ Plushie.checkForNamespace(Plushie.Plushmancer, "Listbox").Collection = class Col
 				this[index] = new Plushie.Plushmancer.Listbox(columns[index].uniqueValues);
 				thisTd.appendChild(this[index].options.selectElement);
 				thisTd.appendChild(this[index].listbox);
-				// thisTd.appendChild(this[index].dropdown);
 				collection.appendChild(thisTd);
 				this[index].addEventListener("focus", (event) => this.onFocus(event, index));
 				this[index].addEventListener("focusout", (event) => this.onFocusOut(event, index));
