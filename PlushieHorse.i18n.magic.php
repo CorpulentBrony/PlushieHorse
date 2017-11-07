@@ -16,6 +16,7 @@ $magicWords = array();
 $magicWords["en"] = array(
 	"first_rev" => array(0, "first_rev"),
 	"image_info" => array(0, "image_info"),
+	"meter" => array(0, "meter"),
 	"plushmancer_list" => array(0, "plushmancer_list"),
 	"plushmancer_seo" => array(0, "plushmancer_seo"),
 	"plush_pic" => array(0, "plush_pic"),

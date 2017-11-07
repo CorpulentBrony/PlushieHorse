@@ -6,22 +6,26 @@
 		public const DIR = __DIR__ . "/";
 		private const DIR_INCLUDES = self::DIR . "includes/";
 		public const HTML_DIR = "/extensions/PlushieHorse/";
-		private static $PARSER_FUNCTIONS = ["first_rev", "image_info", "plushmancer_list", "plushmancer_seo", "plush_pic", "randomly_do", "script_ld_json", "set_body_itemtype"];
-		/**
-		 * @var \Ds\Set
-		 */
-		private static $data = null;
+		private const PARSER_FUNCTIONS = ["first_rev", "image_info", "plushmancer_list", "plushmancer_seo", "plush_pic", "randomly_do", "script_ld_json", "set_body_itemtype"];
+		private const PARSER_TAGS = ["meter"];
+		private const VALID_GLOBAL_ATTRIBUTE_PREFIXES = ["aria-", "data-"];
+		private const VALID_GLOBAL_ATTRIBUTES = ["class", "dir", "hidden", "id", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "style", "title", "translate"];
+		private const VALID_METER_ATTRIBUTES = ["high", "low", "max", "min", "optimum", "value"];
 
 		private function __construct() {}
 
-		public static function error(string $message): string {
-			return "<div class=\"errorbox\">{$message}</div>";
+		public static function array_all(array $array, callable $callback, ...$params): bool {
+			foreach ($array as $key => $value)
+				if (!$callback($value, $key, ...$params))
+					return false;
+			return true;
 		}
 
+		public static function error(string $message): string { return "<div class=\"errorbox\">{$message}</div>"; }
+
 		public static function init(Parser &$parser) {
-			if (!isset(self::$data))
-				self::$data = new \Ds\Set();
-			array_walk(self::$PARSER_FUNCTIONS, function(string $tag, int $index, Parser $parser) { $parser->setFunctionHook($tag, [__CLASS__, "parse_{$tag}"]); }, $parser);
+			array_walk(array_merge(self::PARSER_FUNCTIONS), function(string $tag, int $index, Parser $parser) { $parser->setFunctionHook($tag, [__CLASS__, "parse_{$tag}"]); }, $parser);
+			array_walk(array_merge(self::PARSER_TAGS), function(string $tag, int $index, Parser $parser) { $parser->setHook($tag, [__CLASS__, "parse_tag_{$tag}"]); }, $parser);
 		}
 
 		public static function parse_first_rev(Parser $parser, string $name, string $property): string {
@@ -39,7 +43,7 @@
 		public static function parse_plush_pic(Parser $parser): array {
 			if ($parser->getTitle()->getText() === "Main Page") {
 				require_once self::DIR_INCLUDES . "PlushPic.class.php";
-				return [new PlushPic($parser), "noparse" => true, "isHTML" => true];
+				return [new PlushPic($parser), "isHTML" => true, "markerType" => "nowiki", "noparse" => true];
 			}
 			return [wfMessage("plushiehorse-plushmancer-pic-error")->inContentLanguage()->text(), "noparse" => false, "isHTML" => false];
 		}
@@ -94,6 +98,16 @@
 				$bodyAttrs["itemtype"] = $itemtype;
 			}, $itemtype];
 			return "";
+		}
+
+		public static function parse_tag_meter(string $content = "", array $params = [], Parser $parser): array {
+			// $params = array_filter($params, function(string $attribute): bool {
+			// 	return in_array($attribute, self::VALID_METER_ATTRIBUTES, true) 
+			// 		|| in_array($attribute, self::VALID_GLOBAL_ATTRIBUTES, true) 
+			// 		|| self::array_all(self::VALID_GLOBAL_ATTRIBUTE_PREFIXES, function($prefix, string $key, string $attribute): bool { return substr($attribute, 0, strlen($prefix)) === $prefix; }, $attribute);
+			// });
+			return [Html::rawElement("meter", array_map(function(string $value): string { return htmlspecialchars($value); }, $params), $content), "isHTML" => true, "markerType" => "nowiki", "noparse" => true];
+			// style: -webkit-appearance: none; vertical-align: inherit;
 		}
 	}
 	// \SMW\StoreFactory::getStore()->getPropertyValues(null, SMWDIProperty::newFromUserLabel("Has DeviantArt username"))
