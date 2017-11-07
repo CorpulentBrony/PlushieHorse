@@ -1,9 +1,7 @@
 <?php
-	require_once self::DIR_INCLUDES . "HtmlEncoder.class.php";
 	require_once self::DIR_INCLUDES . "PlushmancerListCache.class.php";
 
 	class PlushmancerList {
-		private const ENCODER_ID = "plushmancer_list";
 		private const INLINE_SCRIPTS_ATTRIBUTES = ["id" => "PlushmancerScripts", "type" => "application/json"];
 		private const SCRIPTS = [
 			"Plushie", "TypeAheadBuffer", "Utils", "Polyfills", "Plushmancer/Listbox", "Plushmancer/Listbox/Collection", "Plushmancer/Listbox/Option", "Plushmancer/Listbox/OptionCollection", "Plushmancer/Sorter", "Plushmancer/Sorter/Group", 
@@ -25,9 +23,9 @@
 
 		private static function getScriptPath(string $name): string { return self::getFilePath("js/{$name}.js"); }
 
-		private static function getScripts(): string {
-			return self::$cache->tryFetchCheck("scriptsObject", function(): string {
-				return array_reduce(self::SCRIPTS, function(string $tags, string $script): string { return $tags . Html::rawElement("script", ["async" => true, "src" => self::getScriptPath($script)]); }, "");
+		private static function getScripts(): array {
+			return self::$cache->tryFetchCheck("scriptsObject", function(): array {
+				return array_map(function(string $script): string { return Html::rawElement("script", ["async" => true, "src" => self::getScriptPath($script)]); }, self::SCRIPTS);
 			}, crc32(serialize(self::SCRIPTS)));
 		}
 
@@ -39,7 +37,9 @@
 				self::$cache = new PlushmancerListCache();
 		}
 
-		public function __toString(): string { return new HtmlEncoder(self::ENCODER_ID, base64_encode(self::getAllTags())); }
+		public function toArray(): array {
+			return array_merge([self::getInlineScripts(), self::getLoaderScript(), self::getStyle()], self::getScripts());
+		}
 	}
 // $descriptionFactory = new \SMW\Query\DescriptionFactory();
 // $query = new \SMWQuery($descriptionFactory->newClassDescription(new \SMW\DIWikiPage("Plushmancer", NS_CATEGORY)));

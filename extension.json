@@ -23,12 +23,6 @@
 	"Hooks": {
 		"ParserFirstCallInit": [
 			"PlushieHorse::init"
-		],
-		"OutputPageBeforeHTML": [
-			"PlushieHorse::onOutputPageBeforeHTML"
-		],
-		"BeforePageDisplay": [
-			"PlushieHorse::onBeforePageDisplay"
 		]
 	},
 	"manifest_version": 1

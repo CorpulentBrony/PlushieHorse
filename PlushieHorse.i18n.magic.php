@@ -21,4 +21,5 @@ $magicWords["en"] = array(
 	"plush_pic" => array(0, "plush_pic"),
 	"randomly_do" => array(0, "randomly_do"),
 	"script_ld_json" => array(0, "script_ld_json"),
+	"set_body_itemtype" => array(0, "set_body_itemtype"),
 );

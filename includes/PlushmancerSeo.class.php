@@ -1,10 +1,8 @@
 <?php
-	require_once self::DIR_INCLUDES . "HtmlEncoder.class.php";
 	require_once self::DIR_INCLUDES . "PlushFile.class.php";
 
 	class PlushmancerSeo {
 		public const ARTICLE_SECTION = "Plushmancer";
-		private const ENCODER_ID = "plushmancer_seo";
 		public const FB_ADMINS = "otaku12";
 		public const OG_TYPE = "article";
 		public const TWITTER_CARD = "summary_large_image";
@@ -18,32 +16,6 @@
 		public function __construct(Parser $parser, string $imageTitle) {
 			$this->imageTitle = $imageTitle;
 			$this->parser = $parser;
-		}
-
-		public function __toString(): string {
-			global $wgServer;
-			$seo = Html::rawElement("meta", ["content" => $this->getPageTitle(), "itemprop" => "alternateName", "name" => "title", "property" => "og:title"]) .
-				Html::rawElement("meta", ["content" => $this->getDescription(), "itemprop" => "description", "name" => "description", "property" => "og:description"]) .
-				Html::rawElement("meta", ["content" => $this->getKeywords(), "itemprop" => "keywords", "name" => "keywords"]) .
-				Html::rawElement("meta", ["content" => $this->getImageUrl(), "itemprop" => "image", "name" => "twitter:image", "property" => "og:image"]) .
-				Html::rawElement("meta", ["content" => $this->getImageAltText(), "name" => "twitter:image:alt", "property" => "og:image:alt"]) .
-				Html::rawElement("meta", ["content" => $this->getImageWidth(), "property" => "og:image:width"]) .
-				Html::rawElement("meta", ["content" => $this->getImageHeight(), "property" => "og:image:height"]) .
-				Html::rawElement("meta", ["content" => $this->getImageType(), "property" => "og:image:type"]) .
-				Html::rawElement("meta", ["content" => self::OG_TYPE, "property" => "og:type"]) .
-				Html::rawElement("meta", ["content" => $this->getPageUrl(), "itemprop" => "url", "property" => "og:url"]) .
-				Html::rawElement("meta", ["content" => self::FB_ADMINS, "property" => "fb:admins"]) .
-				Html::rawElement("meta", ["content" => self::TWITTER_CARD, "name" => "twitter:card"]) .
-				Html::rawElement("meta", ["content" => $this->getPageTitle(), "name" => "twitter:title"]) .
-				Html::rawElement("meta", ["content" => $this->getDescription(), "name" => "twitter:description"]) .
-				$this->getRevisions()->authors .
-				Html::rawElement("meta", ["content" => $wgServer, "itemprop" => "publisher", "property" => "article:publisher"]) .
-				Html::rawElement("meta", ["content" => self::ARTICLE_SECTION, "property" => "article:section"]) .
-				Html::rawElement("meta", ["content" => "free", "property" => "article:content_tier"]) .
-				Html::rawElement("meta", ["content" => $this->getModifiedTime(), "itemprop" => "dateModified", "property" => "article:modified_time"]) .
-				Html::rawElement("meta", ["content" => $this->getPublishedTime(), "itemprop" => "dateCreated", "property" => "article:published_time"]) .
-				$this->getKeywordsAsTags();
-			return new HtmlEncoder(self::ENCODER_ID, base64_encode($seo));
 		}
 
 		public function getAuthorUrl(): string { return $this->getRevisions()->current->getUserUrl(); }
@@ -66,8 +38,18 @@
 		public function getImageWidth(): string { return $this->getImage()->getWidth(); }
 		public function getKeywords(): string { return wfMessage("plushiehorse-seo-keywords", $this->getPageName())->inContentLanguage()->plain(); }
 
-		public function getKeywordsAsTags(): string {
-			return array_reduce(explode(",", $this->getKeywords()), function(string $metaTags, string $tag): string { return $metaTags . Html::rawElement("meta", ["content" => $tag, "property" => "article:tag"]); }, "");
+		public function getKeywordsAsTags(): array {
+			$result = new \Ds\Set();
+			$token = ",";
+			$tag = strtok($this->getKeywords(), $token);
+
+			while ($tag !== false) {
+				$result->add(Html::rawElement("meta", ["content" => $tag, "property" => "article:tag"]));
+				$tag = strtok($token);
+			}
+			// free memory by resetting strtok
+			strtok("", "");
+			return $result->toArray();
 		}
 
 		public function getModifiedTime(): string { return $this->getRevisions()->current->getTimestamp(); }
@@ -95,7 +77,7 @@
 				if ($user !== false && $user->getId() > 0)
 					$metaAuthors->add(Html::rawElement("meta", ["content" => $user->getUserPage()->getCanonicalURL(), "itemprop" => "author", "property" => "article:author"]));
 				return $metaAuthors;
-			}, new \Ds\Set())->join();
+			}, new \Ds\Set())->toArray();
 			return $this->_revisions = $revisions;
 		}
 
@@ -107,6 +89,31 @@
 
 		public function isAuthorAnon(): bool { return $this->getRevisions()->current->getUserUrl() === ""; }
 		public function isPublisherAnon(): bool { return $this->getRevisions()->first->getUserUrl() === ""; }
+
+		public function toArray(): array {
+			global $wgServer;
+			return array_merge([
+				Html::rawElement("meta", ["content" => $this->getPageTitle(), "itemprop" => "alternateName", "name" => "title", "property" => "og:title"]),
+				Html::rawElement("meta", ["content" => $this->getDescription(), "itemprop" => "description", "name" => "description", "property" => "og:description"]),
+				Html::rawElement("meta", ["content" => $this->getKeywords(), "itemprop" => "keywords", "name" => "keywords"]),
+				Html::rawElement("meta", ["content" => $this->getImageUrl(), "itemprop" => "image", "name" => "twitter:image", "property" => "og:image"]),
+				Html::rawElement("meta", ["content" => $this->getImageAltText(), "name" => "twitter:image:alt", "property" => "og:image:alt"]),
+				Html::rawElement("meta", ["content" => $this->getImageWidth(), "property" => "og:image:width"]),
+				Html::rawElement("meta", ["content" => $this->getImageHeight(), "property" => "og:image:height"]),
+				Html::rawElement("meta", ["content" => $this->getImageType(), "property" => "og:image:type"]),
+				Html::rawElement("meta", ["content" => self::OG_TYPE, "property" => "og:type"]),
+				Html::rawElement("meta", ["content" => $this->getPageUrl(), "itemprop" => "url", "property" => "og:url"]),
+				Html::rawElement("meta", ["content" => self::FB_ADMINS, "property" => "fb:admins"]),
+				Html::rawElement("meta", ["content" => self::TWITTER_CARD, "name" => "twitter:card"]),
+				Html::rawElement("meta", ["content" => $this->getPageTitle(), "name" => "twitter:title"]),
+				Html::rawElement("meta", ["content" => $this->getDescription(), "name" => "twitter:description"]),
+				Html::rawElement("meta", ["content" => $wgServer, "itemprop" => "publisher", "property" => "article:publisher"]),
+				Html::rawElement("meta", ["content" => self::ARTICLE_SECTION, "property" => "article:section"]),
+				Html::rawElement("meta", ["content" => "free", "property" => "article:content_tier"]),
+				Html::rawElement("meta", ["content" => $this->getModifiedTime(), "itemprop" => "dateModified", "property" => "article:modified_time"]),
+				Html::rawElement("meta", ["content" => $this->getPublishedTime(), "itemprop" => "dateCreated", "property" => "article:published_time"])
+			], $this->getRevisions()->authors, $this->getKeywordsAsTags());
+		}
 	}
 
 	class PlushmancerSeoRevision {

@@ -25,8 +25,10 @@
 				var_dump($key);
 				var_dump($value);
 			}
+			var_dump("dump over");
 		}
 
+		public function delete(string $key): bool { return apcu_delete($this->prefix . $key); }
 		public function exists(string $key): bool { return apcu_exists($this->prefix . $key); }
 		public function fetch(string $key) { return apcu_fetch($this->prefix . $key); }
 		public function store(string $key, $value) { apcu_store($this->prefix . $key, $value, $this->ttlSeconds); }
