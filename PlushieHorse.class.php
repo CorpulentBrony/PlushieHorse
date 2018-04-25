@@ -7,7 +7,7 @@
 		private const DIR_INCLUDES = self::DIR . "includes/";
 		public const HTML_DIR = "/extensions/PlushieHorse/";
 		private const PARSER_FUNCTIONS = ["first_rev", "image_info", "plushmancer_list", "plushmancer_seo", "plush_pic", "randomly_do", "script_ld_json", "set_body_itemtype"];
-		private const PARSER_TAGS = ["meter"];
+		private const PARSER_TAGS = ["meter", "nav"];
 		private const VALID_GLOBAL_ATTRIBUTE_PREFIXES = ["aria-", "data-"];
 		private const VALID_GLOBAL_ATTRIBUTES = ["class", "dir", "hidden", "id", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "style", "title", "translate"];
 		private const VALID_METER_ATTRIBUTES = ["high", "low", "max", "min", "optimum", "value"];
@@ -26,6 +26,28 @@
 		public static function init(Parser &$parser) {
 			array_walk(array_merge(self::PARSER_FUNCTIONS), function(string $tag, int $index, Parser $parser) { $parser->setFunctionHook($tag, [__CLASS__, "parse_{$tag}"]); }, $parser);
 			array_walk(array_merge(self::PARSER_TAGS), function(string $tag, int $index, Parser $parser) { $parser->setHook($tag, [__CLASS__, "parse_tag_{$tag}"]); }, $parser);
+		}
+
+		private static function makeParametersSafe(array $params): array { return array_map(function(string $value): string { return htmlspecialchars($value); }, $params); }
+
+		public static function onBeforePageDisplay(OutputPage $out, Skin $skin) {
+			require_once self::DIR_INCLUDES . "PlushArticle.class.php";
+			// $out->addHeadItems(Html::rawElement("link", ["href" => "//creativecommons.org/licenses/by-nc-sa/4.0/", "itemprop" => "license", "rel" => "code-license content-license license", "type" => "text/html"]));
+			// $out->addHeadItems(Html::rawElement("link", ["href" => "//horse.best", "rel" => "bestpony", "type" => "text/html"]));
+			// $out->addHeadItems(Html::rawElement("script", ["async" => true, "type" => "application/ld+json"], strval(new PlushArticle($out, $skin))));
+			$plushArticle = new PlushArticle($out, $skin);
+			$out->addHeadItems($plushArticle->toArray());
+		}
+
+		public static function parse_article_json(Parser $parser): string {
+			// i want this to be moved to a straight up hook that'll load on every *content page*
+			global $wgHooks;
+			$wgHooks["BeforePageDisplay"][] = function(OutputPage $out, Skin $skin) {
+				require_once self::DIR_INCLUDES . "PlushArticle.class.php";
+				$test = new PlushArticle($out, $skin);
+				var_dump((string) $test);
+			};
+			return "";
 		}
 
 		public static function parse_first_rev(Parser $parser, string $name, string $property): string {
@@ -101,13 +123,26 @@
 		}
 
 		public static function parse_tag_meter(string $content = "", array $params = [], Parser $parser): array {
-			// $params = array_filter($params, function(string $attribute): bool {
-			// 	return in_array($attribute, self::VALID_METER_ATTRIBUTES, true) 
-			// 		|| in_array($attribute, self::VALID_GLOBAL_ATTRIBUTES, true) 
-			// 		|| self::array_all(self::VALID_GLOBAL_ATTRIBUTE_PREFIXES, function($prefix, string $key, string $attribute): bool { return substr($attribute, 0, strlen($prefix)) === $prefix; }, $attribute);
-			// });
-			return [Html::rawElement("meter", array_map(function(string $value): string { return htmlspecialchars($value); }, $params), $content), "isHTML" => true, "markerType" => "nowiki", "noparse" => true];
-			// style: -webkit-appearance: none; vertical-align: inherit;
+			return [Html::rawElement("meter", self::makeParametersSafe($params), htmlspecialchars($content)), "isHTML" => true, "markerType" => "nowiki", "noparse" => true];
+		}
+
+		public static function parse_tag_nav(string $content = "", array $params = [], Parser $parser): array {
+			if ($parser->getTitle()->getText() === "Main Page") {
+				return [Html::rawElement("nav", self::makeParametersSafe($params), $content), "isHTML" => true, "markerType" => "nowiki", "noparse" => true];
+			}
+			return [$content];
+		}
+
+		public static function stringSplitReduce(string $string, string $delimiter, callable $callback, $initialValue = null) {
+			$item = strtok($string, $delimiter);
+
+			while ($item !== false) {
+				$initialValue = is_null($initialValue) ? $item : $callback($initialValue, $item);
+				$item = strtok($delimiter);
+			}
+			// free memory by resetting strtok
+			strtok("", "");
+			return $initialValue;
 		}
 	}
 	// \SMW\StoreFactory::getStore()->getPropertyValues(null, SMWDIProperty::newFromUserLabel("Has DeviantArt username"))

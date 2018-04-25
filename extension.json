@@ -21,6 +21,9 @@
 		"PlushieHorseMagic": "PlushieHorse.i18n.magic.php"
 	},
 	"Hooks": {
+		"BeforePageDisplay": [
+			"PlushieHorse::onBeforePageDisplay"
+		],
 		"ParserFirstCallInit": [
 			"PlushieHorse::init"
 		]

@@ -4,6 +4,7 @@
 			"CorpulentBrony"
 		]
 	},
+	"plushiehorse-article-description": "The $1 page from $2.",
 	"plushiehorse-extensionname": "PlushieHorse",
 	"plushiehorse-desc": "This is a specialized extension specifically for the [https://plushie.horse plushie.horse] Web site. It will probably be of little use outside of that context.  Code repository [https://github.com/CorpulentBrony/PlushieHorse on GitHub].",
 	"plushiehorse-error-decoding-value": "$1: Error decoding value: $2.",

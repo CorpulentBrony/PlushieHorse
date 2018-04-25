@@ -130,7 +130,11 @@
 			else {
 				$artists->apply(function(string $artist): string {
 					$title = Title::newFromText($artist);
-					return ($title instanceof Title && $title->isKnown()) ? Html::rawElement("a", ["href" => $title->getLocalURL()], $artist) : $artist;
+
+					if ($title instanceof Title && $title->isKnown())
+						return Html::rawElement("a", ["href" => $title->getLocalURL()], $artist);
+					else
+						return Html::rawElement("a", ["href" => "/content/Special:FormEdit/Plushmancer/{$artist}"], $artist);
 				});
 
 				if ($numberArtists === 1)

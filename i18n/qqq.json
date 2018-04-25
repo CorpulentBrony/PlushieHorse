@@ -4,6 +4,7 @@
 			"CorpulentBrony"
 		]
 	},
+	"plushiehorse-article-description": "Short description of a given article as shown in JSON metadata.  Parameters: $1 is the page name and $2 is the site name (Plushie.Horse)",
 	"plushiehorse-extensionname": "The name of the extension, used on the [Special:Version] page",
 	"plushiehorse-desc": "The description of the extension, used on the [Special:Version] page",
 	"plushiehorse-error-decoding-value": "Error message that appears when there was an error decoding the value from its JSON representation.  Parameters: $1 the context; $2 the data that could not be decoded",
@@ -23,5 +24,5 @@
 	"plushiehorse-seo-description": "The common description field as leveraged in various SEO tags.  Parameters: $1 is the name of the plushmancer and $2 is the name of the site (Plushe.Horse)",
 	"plushiehorse-seo-image-alt-text": "The alternate text shown when displaying an example of the plushmancer's work.  Parameter: $1 is the name of the plushmancer",
 	"plushiehorse-seo-keywords": "A comma separated list of keywords used for SEO.  Parameter: $1 is the name of the plushmancer (and should probably be kept in the first position)",
-	"plushiehorse-seo-page-title": "Short title to be displayed in SEO tags.  Parameters: $1 is the name of the plushmancer and $2 is the name of the site (Plushe.Horse)"
+	"plushiehorse-seo-page-title": "Short title to be displayed in SEO tags.  Parameters: $1 is the name of the plushmancer and $2 is the name of the site (Plushie.Horse)"
 }

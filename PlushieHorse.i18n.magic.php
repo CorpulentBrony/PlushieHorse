@@ -5,18 +5,19 @@
  * @file
  *
  * @licence GNU GPL
- * @author Your Name (YourUserName)
+ * @author Corpulent Brony (CorpulentBrony)
  */
 
 $magicWords = array();
 
 /** English
- * @author Your Name (YourUserName)
+ * @author Corpulent Brony (CorpulentBrony)
  */
 $magicWords["en"] = array(
 	"first_rev" => array(0, "first_rev"),
 	"image_info" => array(0, "image_info"),
 	"meter" => array(0, "meter"),
+	"nav" => array(0, "nav"),
 	"plushmancer_list" => array(0, "plushmancer_list"),
 	"plushmancer_seo" => array(0, "plushmancer_seo"),
 	"plush_pic" => array(0, "plush_pic"),

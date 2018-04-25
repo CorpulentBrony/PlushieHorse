@@ -39,17 +39,10 @@
 		public function getKeywords(): string { return wfMessage("plushiehorse-seo-keywords", $this->getPageName())->inContentLanguage()->plain(); }
 
 		public function getKeywordsAsTags(): array {
-			$result = new \Ds\Set();
-			$token = ",";
-			$tag = strtok($this->getKeywords(), $token);
-
-			while ($tag !== false) {
+			return PlushieHorse::stringSplitReduce($this->getKeywords(), ",", function(\Ds\Set $result, string $tag): \Ds\Set {
 				$result->add(Html::rawElement("meta", ["content" => $tag, "property" => "article:tag"]));
-				$tag = strtok($token);
-			}
-			// free memory by resetting strtok
-			strtok("", "");
-			return $result->toArray();
+				return $result;
+			}, new \Ds\Set())->toArray();
 		}
 
 		public function getModifiedTime(): string { return $this->getRevisions()->current->getTimestamp(); }
@@ -64,10 +57,10 @@
 		public function getPublishedTime(): string { return $this->getRevisions()->first->getTimestamp(); }
 		public function getPublisherUrl(): string { return $this->getRevisions()->first->getUserUrl(); }
 
-		private function getRevisions(): stdClass {
+		private function getRevisions(): \stdClass {
 			if (!empty($this->_revisions))
 				return $this->_revisions;
-			$revisions = new stdClass();
+			$revisions = new \stdClass();
 			$revisions->current = new PlushmancerSeoRevision($this->parser->fetchCurrentRevisionOfTitle($this->getTitle()));
 			$revisions->first = new PlushmancerSeoRevision($this->getTitle()->getFirstRevision());
 			$authors = array_reverse($this->getTitle()->getAuthorsBetween($revisions->first->revision, $revisions->current->revision, 1000, "include_both"));
@@ -91,6 +84,8 @@
 		public function isPublisherAnon(): bool { return $this->getRevisions()->first->getUserUrl() === ""; }
 
 		public function toArray(): array {
+			if (!($this->parser->fetchCurrentRevisionOfTitle($this->getTitle()) instanceof Revision))
+				return [];
 			global $wgServer;
 			return array_merge([
 				Html::rawElement("meta", ["content" => $this->getPageTitle(), "itemprop" => "alternateName", "name" => "title", "property" => "og:title"]),
