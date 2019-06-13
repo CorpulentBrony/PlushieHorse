@@ -17,11 +17,13 @@
 		private function accessFile(string $action): string {
 			$result = "";
 
-			if (isset($this->cache) && !empty($result = $this->cache->get($action))) {
+			if (isset($this->cache) && !empty($result = $this->cache->get($action)))
 				return $result;
-			}
 			$this->getFile();
-			$this->cache->set($action, $result = ($this->file instanceof File) ? strval($this->file->{$action}()) : "");
+			$result = ($this->file instanceof File) ? strval($this->file->{$action}()) : "";
+
+			if (isset($this->cache))
+				$this->cache->set($action, $result);
 			return $result;
 		}
 
@@ -29,7 +31,7 @@
 			$this->title = Title::newFromText($this->name);
 
 			if ($this->title instanceof Title) {
-				if ($this->title->getNamespace() != NS_FILE) 
+				if ($this->title->getNamespace() != NS_FILE)
 					$this->title = Title::makeTitle(NS_FILE, $this->title->getText());
 				$this->file = wfFindFile($this->title);
 

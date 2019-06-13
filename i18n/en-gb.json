@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"CorpulentBrony"
+		]
+	},
+	"plushiehorse-article-description": "$1 at $2.",
+	"plushiehorse-desc": "This is a specialized extension specifically for the [https://plushie.horse plushie.horse] Web site. It will probably be of little use outside of that context.  Code repository [https://github.com/CorpulentBrony/PlushieHorse at GitHub].",
+	"plushiehorse-plushmancer-list-error": "Sorry, can only build a plushmancer list at the [[Plushmancer List]] page.",
+	"plushiehorse-plushmancer-pic-error": "Sorry, can only fetch a plush pic at the [[Main Page]].",
+	"plushiehorse-seo-description": "Plush toy maker $1 as featured at $2, including prices, features, and sizes offered.",
+	"plushiehorse-seo-page-title": "Plushmancer $1 at $2"
+}

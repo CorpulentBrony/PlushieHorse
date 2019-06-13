@@ -4,7 +4,9 @@
 			"CorpulentBrony"
 		]
 	},
-	"plushiehorse-article-description": "The $1 page from $2.",
+	"plushiehorse-article-anonymous-name": "Anonymous IP user",
+	"plushiehorse-article-description": "$1 on $2.",
+	"plushiehorse-article-pixel": "pixel",
 	"plushiehorse-extensionname": "PlushieHorse",
 	"plushiehorse-desc": "This is a specialized extension specifically for the [https://plushie.horse plushie.horse] Web site. It will probably be of little use outside of that context.  Code repository [https://github.com/CorpulentBrony/PlushieHorse on GitHub].",
 	"plushiehorse-error-decoding-value": "$1: Error decoding value: $2.",
@@ -19,9 +21,9 @@
 	"plushiehorse-pic-caption-source": "$1 ($2) hosted by $3.",
 	"plushiehorse-pic-caption-word-image": "Image",
 	"plushiehorse-pic-caption-word-source": "source",
-	"plushiehorse-plushmancer-list-error": "Sorry, can only build a plushmancer list on the [Plushmancer List] page.",
-	"plushiehorse-plushmancer-pic-error": "Sorry, can only fetch a plush pic on the [Main Page].",
-	"plushiehorse-seo-description": "The work of pony plush maker $1 as featured on $2, including prices, features, and sizes offered.",
+	"plushiehorse-plushmancer-list-error": "Sorry, can only build a plushmancer list on the [[Plushmancer List]] page.",
+	"plushiehorse-plushmancer-pic-error": "Sorry, can only fetch a plush pic on the [[Main Page]].",
+	"plushiehorse-seo-description": "Plush maker $1 as featured on $2, including prices, features, and sizes offered.",
 	"plushiehorse-seo-image-alt-text": "An example image of a plush made by $1.",
 	"plushiehorse-seo-keywords": "$1,plushie,horse,pony,mlp,artist,plush maker,plushmancer,brony",
 	"plushiehorse-seo-page-title": "Plushmancer $1 on $2"

@@ -4,9 +4,11 @@
 			"CorpulentBrony"
 		]
 	},
+	"plushiehorse-article-anonymous-name": "The text shown when the author of an article is anonymous and known only by their IP address.",
 	"plushiehorse-article-description": "Short description of a given article as shown in JSON metadata.  Parameters: $1 is the page name and $2 is the site name (Plushie.Horse)",
-	"plushiehorse-extensionname": "The name of the extension, used on the [Special:Version] page",
-	"plushiehorse-desc": "The description of the extension, used on the [Special:Version] page",
+	"plushiehorse-article-pixel": "The unit name for the unit of measure that is known as a pixel in English.",
+	"plushiehorse-extensionname": "The name of the extension, used on the [[Special:Version]] page",
+	"plushiehorse-desc": "The description of the extension, used on the [[Special:Version] page",
 	"plushiehorse-error-decoding-value": "Error message that appears when there was an error decoding the value from its JSON representation.  Parameters: $1 the context; $2 the data that could not be decoded",
 	"plushiehorse-error-hash-mismatch": "Description of the hash mismatch error.  Parameters: $1 the context; $2 the property name; $3 the value of the property",
 	"plushiehorse-list-separator": "Punctuation to separate items in a list (include a space if needed)",

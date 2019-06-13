@@ -4,7 +4,7 @@
 	class PlushmancerList {
 		private const INLINE_SCRIPTS_ATTRIBUTES = ["id" => "PlushmancerScripts", "type" => "application/json"];
 		private const SCRIPTS = [
-			"Plushie", "TypeAheadBuffer", "Utils", "Polyfills", "Plushmancer/Listbox", "Plushmancer/Listbox/Collection", "Plushmancer/Listbox/Option", "Plushmancer/Listbox/OptionCollection", "Plushmancer/Sorter", "Plushmancer/Sorter/Group", 
+			"Plushie", "TypeAheadBuffer", "Utils", "Polyfills", "Plushmancer/Listbox", "Plushmancer/Listbox/Collection", "Plushmancer/Listbox/Option", "Plushmancer/Listbox/OptionCollection", "Plushmancer/Sorter", "Plushmancer/Sorter/Group",
 			"Plushmancer/Sorter/GroupCollection", "Plushmancer/Table", "Plushmancer/Table/Column", "Plushmancer/Table/ColumnCollection", "Plushmancer/Table/Element", "Plushmancer/Table/Row", "Plushmancer/Table/RowCollection"
 		];
 
@@ -29,7 +29,7 @@
 			}, crc32(serialize(self::SCRIPTS)));
 		}
 
-		private static function getStyle(): string { return self::$cache->tryFetch("style", function(): string { return Html::linkedStyle(self::getStylePath("index")); }); }
+		private static function getStyle(): string { return self::$cache->tryFetch("style", function(): string { return Html::linkedStyle(self::getStylePath("index")); }) ?? ""; }
 		private static function getStylePath(string $name): string { return self::getFilePath("css/{$name}.css"); }
 
 		public function __construct() {
@@ -61,4 +61,22 @@
 // 	}
 // 	return str_replace("_", " ", $item->getSortKey());
 // }, \SMW\StoreFactory::getStore()->getPropertyValues(null, \SMWDIProperty::newFromUserLabel("Has DeviantArt username")));
+
+
+// this way may work
+// $rawParams = preg_split( "/(?<=[^\|])\|(?=[^\|])/", $query_string );
+// list( $queryString, $parameters, $printouts ) = SMWQueryProcessor::getComponentsFromFunctionParams( $rawParams, false );
+
+// SMWQueryProcessor::addThisPrintout( $printouts, $parameters );
+// $parameters = SMWQueryProcessor::getProcessedParams( $parameters, $printouts );
+
+// $query = SMWQueryProcessor::createQuery(
+// 	$queryString,
+// 	$parameters,
+// 	SMWQueryProcessor::SPECIAL_PAGE,
+// 	'',
+// 	$printouts
+// );
+
+// $res = smwfGetStore()->getQueryResult( $query );
 ?>

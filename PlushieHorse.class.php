@@ -67,7 +67,7 @@
 				require_once self::DIR_INCLUDES . "PlushPic.class.php";
 				return [new PlushPic($parser), "isHTML" => true, "markerType" => "nowiki", "noparse" => true];
 			}
-			return [wfMessage("plushiehorse-plushmancer-pic-error")->inContentLanguage()->text(), "noparse" => false, "isHTML" => false];
+			return [wfMessage("plushiehorse-plushmancer-pic-error")->parseAsBlock(), "noparse" => false, "isHTML" => false];
 		}
 
 		public static function parse_plushmancer_list(Parser $parser): string {
@@ -78,7 +78,7 @@
 				$wgHooks["BeforePageDisplay"][] = [function(array $list, OutputPage $out, Skin &$skin) { $out->addHeadItems($list); }, $list->toArray()];
 				return "";
 			}
-			return wfMessage("plushiehorse-plushmancer-list-error")->inContentLanguage()->text();
+			return wfMessage("plushiehorse-plushmancer-list-error")->parseAsBlock();
 		}
 
 		public static function parse_plushmancer_seo(Parser $parser, string $imageTitle): string {

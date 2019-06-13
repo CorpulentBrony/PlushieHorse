@@ -38,7 +38,9 @@ table#PlushmancerListOutput {
 
 	> thead {
 		background-color: $thead-background-color;
+		position: sticky;
 		text-align: center;
+		top: 3.2em;
 
 		> tr {
 			&#PlushmancerListOutputFilterRow > td.plushmancer-filter-widget > div {

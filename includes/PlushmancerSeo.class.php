@@ -22,7 +22,7 @@
 
 		public function getDescription(): string {
 			global $wgSitename;
-			return wfMessage("plushiehorse-seo-description", $this->getPageName(), $wgSitename)->inContentLanguage()->plain();
+			return wfMessage("plushiehorse-seo-description", $this->getPageName(), $wgSitename)->plain();
 		}
 
 		private function getImage(): PlushFile {
@@ -31,12 +31,12 @@
 			return $this->_image = new PlushFile($this->imageTitle);
 		}
 
-		public function getImageAltText(): string { return wfMessage("plushiehorse-seo-image-alt-text", $this->getPageName())->inContentLanguage()->plain(); }
+		public function getImageAltText(): string { return wfMessage("plushiehorse-seo-image-alt-text", $this->getPageName())->plain(); }
 		public function getImageHeight(): string { return $this->getImage()->getHeight(); }
 		public function getImageType(): string { return $this->getImage()->getMimeType(); }
 		public function getImageUrl(): string { return $this->getImage()->getUrl(); }
 		public function getImageWidth(): string { return $this->getImage()->getWidth(); }
-		public function getKeywords(): string { return wfMessage("plushiehorse-seo-keywords", $this->getPageName())->inContentLanguage()->plain(); }
+		public function getKeywords(): string { return wfMessage("plushiehorse-seo-keywords", $this->getPageName())->plain(); }
 
 		public function getKeywordsAsTags(): array {
 			return PlushieHorse::stringSplitReduce($this->getKeywords(), ",", function(\Ds\Set $result, string $tag): \Ds\Set {
@@ -64,13 +64,16 @@
 			$revisions->current = new PlushmancerSeoRevision($this->parser->fetchCurrentRevisionOfTitle($this->getTitle()));
 			$revisions->first = new PlushmancerSeoRevision($this->getTitle()->getFirstRevision());
 			$authors = array_reverse($this->getTitle()->getAuthorsBetween($revisions->first->revision, $revisions->current->revision, 1000, "include_both"));
-			$revisions->authors = array_reduce($authors, function(\Ds\Set $metaAuthors, string $author): \Ds\Set {
+			$authorRevisions = array_reduce($authors, function(\Ds\Set $metaAuthors, string $author): \Ds\Set {
 				$user = User::newFromName($author);
 
 				if ($user !== false && $user->getId() > 0)
 					$metaAuthors->add(Html::rawElement("meta", ["content" => $user->getUserPage()->getCanonicalURL(), "itemprop" => "author", "property" => "article:author"]));
 				return $metaAuthors;
-			}, new \Ds\Set())->toArray();
+			}, new \Ds\Set());
+
+			if (!is_null($authorRevisions))
+				$revisions->authors = $authorRevisions->toArray();
 			return $this->_revisions = $revisions;
 		}
 
@@ -87,7 +90,7 @@
 			if (!($this->parser->fetchCurrentRevisionOfTitle($this->getTitle()) instanceof Revision))
 				return [];
 			global $wgServer;
-			return array_merge([
+			$result = array_merge([
 				Html::rawElement("meta", ["content" => $this->getPageTitle(), "itemprop" => "alternateName", "name" => "title", "property" => "og:title"]),
 				Html::rawElement("meta", ["content" => $this->getDescription(), "itemprop" => "description", "name" => "description", "property" => "og:description"]),
 				Html::rawElement("meta", ["content" => $this->getKeywords(), "itemprop" => "keywords", "name" => "keywords"]),
@@ -108,6 +111,7 @@
 				Html::rawElement("meta", ["content" => $this->getModifiedTime(), "itemprop" => "dateModified", "property" => "article:modified_time"]),
 				Html::rawElement("meta", ["content" => $this->getPublishedTime(), "itemprop" => "dateCreated", "property" => "article:published_time"])
 			], $this->getRevisions()->authors, $this->getKeywordsAsTags());
+			return is_null($result) ? [] : $result;
 		}
 	}
 
@@ -116,21 +120,23 @@
 		private $_userUrl = "";
 		public $revision = null;
 
-		public function __construct(Revision $revision) {
+		public function __construct($revision) {
 			$this->revision = $revision;
 		}
 
-		public function getId(): int { return $this->revision->getId(); }
+		public function getId(): int { return $this->isValidRevision() ? $this->revision->getId() : 0; }
 
 		public function getTimestamp(): string {
 			if (!empty($this->_timestamp))
 				return $this->_timestamp;
-			$timestamp = new \DateTime($this->revision->getTimestamp());
+			$timestamp = new \DateTime($this->isValidRevision() ? $this->revision->getTimestamp() : null);
 			return $this->_timestamp = $timestamp->format(\DateTime::W3C);
 		}
 
 		public function getUserUrl(): string {
-			if (!empty($this->_userUrl))
+			if (!$this->isValidReason())
+				return $this->_userUrl = "";
+			else if (!empty($this->_userUrl))
 				return $this->_userUrl;
 			$user = User::newFromId($this->revision->getUser());
 
@@ -138,5 +144,7 @@
 				return $this->_userUrl = "";
 			return $this->_userUrl = User::newFromId($this->revision->getUser())->getUserPage()->getCanonicalURL();
 		}
+
+		private function isValidRevision() { return !is_null($this->revision); }
 	}
 ?>

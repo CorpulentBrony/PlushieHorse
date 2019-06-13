@@ -14,9 +14,8 @@ window.Object.defineProperties(Plushie, {
 let plushie;
 Plushie.addEventListener("ready", function onReady(event) {
 	Plushie.Utils.setImmediate(() => {
-		window.console.log("hey, i just got notified we're ready to go!");
 		plushie = new Plushie.Plushmancer.Table();
-		window.console.log(plushie.init());
+		plushie.init().listboxes[1].options.select(0, 3);
 		Plushie.removeEventListener("ready", onReady);
 	});
 });

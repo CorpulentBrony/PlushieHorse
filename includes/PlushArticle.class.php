@@ -41,16 +41,14 @@
 				if ($user instanceof User) {
 					if ($user->isAnon()) {
 						$author->{"@id"} = $GLOBALS["wgServer"] . "#/users/ip/" . $user->getName();
-						$author->description = "Anonymous IP user";
+						$author->description = wfMessage("plushiehorse-article-anonymous-name")->plain();
 						$author->name = $user->getName();
 					} else {
-						$author->{"@id"} = $GLOBALS["wgServer"] . "#/users/id/" . strval($user->getId());
-						$author->name = $user->getName();
-						$author->url = $user->getUserPage()->getCanonicalURL();
+						$author->{"@id"} = $user->getUserPage()->getCanonicalURL();
 					}
 				} else {
 					$author->{"@id"} = $GLOBALS["wgServer"] . "#/users/ip/" . $authorName;
-					$author->description = "Anonymous IP user";
+					$author->description = wfMessage("plushiehorse-article-anonymous-name")->plain();
 					$author->name = $authorName;
 				}
 				$authors[] = $author;
@@ -65,17 +63,16 @@
 			if (!($firstRevision instanceof Revision))
 				return "";
 			$createdDate = new \DateTime($firstRevision->getTimestamp());
-			$createdDateFormatted = $createdDate->format(\DateTime::W3C);
-			return Html::rawElement("meta", ["content" => $createdDate->format(\DateTime::W3C), "itemprop" => "dateCreated", "property" => "article:published_time"]);
+			return $createdDate->format(\DateTime::W3C);
 		}
 
 		public function getDateModified(): string {
 			$modifiedDate = new \DateTime($this->getTitle()->getTouched());
 			$modifiedDateFormatted = $modifiedDate->format(\DateTime::W3C);
-			return empty($modifiedDateFormatted) ? "" : Html::rawElement("meta", ["content" => $modifiedDateFormatted, "itemprop" => "dateModified", "property" => "article:modified_time"]);
+			return empty($modifiedDateFormatted) ? $this->getDateCreated() : $modifiedDateFormatted;
 		}
 
-		public function getDescription(): string { return wfMessage("plushiehorse-article-description", $this->getTitle()->getText(), $GLOBALS["wgSitename"])->inContentLanguage()->plain(); }
+		public function getDescription(): string { return wfMessage("plushiehorse-article-description", $this->getTitle()->getText(), $GLOBALS["wgSitename"])->plain(); }
 		public function getDiscussionUrl(): \stdClass { return $this->isContentTitle() ? self::newSimpleObject("discussionUrl", $this->getTitle()->getTalkPage()->getCanonicalURL()) : new \stdClass(); }
 
 		private function getFirstRevision() {
@@ -84,7 +81,7 @@
 			return $this->_firstRevision;
 		}
 
-		public function getHeadline(): string { return $this->out->getHTMLTitle(); }
+		public function getHeadline(): string { return $this->out->getHTMLTitle() ?? ""; }
 		private function getId(): string { return self::getPageIdPrefix() . strval($this->getTitle()->getArticleID()); }
 
 		public function getImage(): \stdClass {
@@ -125,6 +122,7 @@
 
 		public function getMainEntityOfPage(): \stdClass {
 			$mainEntityOfPage = new \stdClass();
+			$mainEntityOfPage->{"@id"} = $this->getTitle()->getFullURL();
 			$mainEntityOfPage->{"@type"} = "WebPage";
 			$mainEntityOfPage->url = $this->getTitle()->getFullURL();
 			return self::newSimpleObject("mainEntityOfPage", $mainEntityOfPage);
@@ -134,7 +132,7 @@
 			$pixelValue = new \stdClass();
 			$pixelValue->{"@type"} = "QuantitativeValue";
 			$pixelValue->unitCode = "E37";
-			$pixelValue->unitText = "pixel";
+			$pixelValue->unitText = wfMessage("plushiehorse-article-pixel")->plain();
 			$pixelValue->value = $numPixels;
 			return $pixelValue;
 		}
@@ -185,8 +183,9 @@
 					Html::rawElement("meta", ["content" => $this->getDescription(), "name" => "twitter:description"]),
 					Html::rawElement("meta", ["content" => $GLOBALS["wgServer"], "itemprop" => "publisher", "property" => "article:publisher"]),
 					Html::rawElement("meta", ["content" => "free", "property" => "article:content_tier"]),
-					$this->getDateCreated(),
-					$this->getDateModified()
+					Html::rawElement("meta", ["content" => $this->getDateCreated(), "itemprop" => "dateCreated", "property" => "article:published_time"]),
+					Html::rawElement("meta", ["content" => $this->getDateModified(), "itemprop" => "dateModified", "property" => "article:modified_time"])
+
 
 					// <meta content="2017-09-21T18:41:25+00:00" itemprop="dateModified" property="article:modified_time">
 					// <meta content="2017-09-15T04:48:20+00:00" itemprop="dateCreated" property="article:published_time">
@@ -216,17 +215,39 @@
 		}
 
 		public function toObject(): \stdClass {
+			// was modifying this to change the type of object from Article to Person if we are in the User namespace
 			$object = new \stdClass();
 			$object->{"@context"} = "https://schema.org";
-			$object->{"@id"} = $this->getId();
-			$object->{"@type"} = "Article";
+			$object->{"@id"} = $this->getTitle()->getFullURL();
 			$object->additionalType = "https://schema.org/WebPage";
-			self::copyFromObject($this->getAuthors(), $object);
-			self::copyFromObject($this->getDiscussionUrl(), $object);
-			self::copyFromObject(self::newSimpleObject("headline", $this->getHeadline()), $object);
-			self::copyFromObject($this->getImage(), $object);
+			$image = null;
+
+			if ($this->getTitle()->inNamespace(NS_USER)) {
+				$userName = $this->getTitle()->getText();
+				$user = User::newFromName($userName);
+				$object->{"@type"} = "Person";
+				$contactPoint = new \stdClass();
+				$contactPoint->{"@type"} = "ContactPoint";
+				$contactPoint->contactType = "talk page";
+				$contactPoint->url = $this->getTitle()->getTalkPage()->getCanonicalURL();
+				self::copyFromObject(self::newSimpleObject("contactPoint", $contactPoint), $object);
+				$image = $this->getImageFile()->isLogo ? new \stdClass() : $this->getImage();
+				$gender = ucfirst($user->getOption("gender"));
+				$object->gender = ($gender == "Male" || $gender == "Female") ? "https://schema.org/{$gender}" : "unknown";
+				$object->knowsLanguage = $user->getOption("language");
+			} else {
+				$object->{"@type"} = "Article";
+				self::copyFromObject($this->getAuthors(), $object);
+				$object->dateModified = $this->getDateModified();
+				$object->datePublished = $this->getDateCreated();
+				self::copyFromObject($this->getDiscussionUrl(), $object);
+				$object->headline = $this->getHeadline();
+				$image = $this->getImage();
+				self::copyFromObject($this->getPublisher(), $object);
+			}
+			self::copyFromObject($image, $object);
 			self::copyFromObject($this->getMainEntityOfPage(), $object);
-			self::copyFromObject($this->getPublisher(), $object);
+			$object->url = $this->getTitle()->getFullURL();
 			return $object;
 		}
 
