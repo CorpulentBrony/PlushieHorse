@@ -4,8 +4,9 @@
 	class PlushmancerList {
 		private const INLINE_SCRIPTS_ATTRIBUTES = ["id" => "PlushmancerScripts", "type" => "application/json"];
 		private const SCRIPTS = [
-			"Plushie", "TypeAheadBuffer", "Utils", "Polyfills", "Plushmancer/Listbox", "Plushmancer/Listbox/Collection", "Plushmancer/Listbox/Option", "Plushmancer/Listbox/OptionCollection", "Plushmancer/Sorter", "Plushmancer/Sorter/Group",
-			"Plushmancer/Sorter/GroupCollection", "Plushmancer/Table", "Plushmancer/Table/Column", "Plushmancer/Table/ColumnCollection", "Plushmancer/Table/Element", "Plushmancer/Table/Row", "Plushmancer/Table/RowCollection"
+			"Plushie", "TypeAheadBuffer", "Utils", "Polyfills", "Plushmancer/Listbox", "Plushmancer/Listbox/Collection", "Plushmancer/Listbox/Option", "Plushmancer/Listbox/OptionCollection", "Plushmancer/Sorter",
+			/*"Plushmancer/Sorter/Collection",*/ "Plushmancer/Sorter/Group","Plushmancer/Sorter/GroupCollection", "Plushmancer/Table", "Plushmancer/Table/Column", "Plushmancer/Table/ColumnCollection", "Plushmancer/Table/Element",
+			"Plushmancer/Table/Row", "Plushmancer/Table/RowCollection"
 		];
 
 		private static $cache = null;

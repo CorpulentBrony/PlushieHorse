@@ -29,6 +29,23 @@ $widget-box-shadow: 0 0.1em 0.2em rgba(0, 0, 0, 0.45);
 }
 
 table#PlushmancerListOutput {
+
+}
+
+span.plushmancer-sorters > span[role="radio"] {
+	@include cursor-pointer;
+	box-shadow: $widget-box-shadow;
+	color: lightgray;
+	-webkit-touch-callout: none;
+	@include user-select(none);
+
+	&[aria-checked="true"] { color: black; }
+}
+
+
+
+// need to re-write the below
+table#PlushmancerListOutput {
 	@include table-border;
 	background-color: $table-background-color;
 	border-collapse: collapse;
@@ -143,15 +160,6 @@ table#PlushmancerListOutput {
 						width: 100%;
 					}
 				}
-				&.plushmancer-sorters > span[role="radio"] {
-							@include cursor-pointer;
-							box-shadow: $widget-box-shadow;
-							color: lightgray;
-							-webkit-touch-callout: none;
-							@include user-select(none);
-
-							&[aria-checked="true"] { color: black; }
-				}
 			}
 			> th, > td {
 				border: {
@@ -166,7 +174,7 @@ table#PlushmancerListOutput {
 	}
 	> tbody > tr {
 		&[aria-hidden="true"] { @extend .invisible; }
-		> td {
+		> td, > th {
 			@include table-border;
 			padding: 0.2em;
 		}

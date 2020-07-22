@@ -11,7 +11,7 @@ Plushie.checkForNamespace(Plushie.Plushmancer, "Sorter").Group = class Group ext
 
 	get group() {
 		return Plushie.Utils.getPrivateProperty(this, "group", () => {
-			const group = Plushie.Utils.createElement("div", { class: "plushmancer-sorters" });
+			const group = Plushie.Utils.createElement("span", { class: "plushmancer-sorters" });
 			this.ascending.addEventListener("sort", (event) => this.onSort(event));
 			this.descending.addEventListener("sort", (event) => this.onSort(event));
 			group.appendChild(this.ascending.value);

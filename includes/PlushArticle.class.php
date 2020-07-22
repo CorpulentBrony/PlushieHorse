@@ -168,6 +168,7 @@
 					$this->out->setCanonicalUrl($GLOBALS["wgServer"]);
 				$imageFile = $this->getImageFile();
 				$result = [
+					Html::rawElement("link", ["href" => "/sitemap/sitemap-index-wikidb.xml", "rel" => "sitemap", "type" => "application/xml"]),
 					Html::rawElement("meta", ["content" => $this->getHeadline(), "itemprop" => "alternateName", "name" => "title", "property" => "og:title"]),
 					Html::rawElement("meta", ["content" => $this->getDescription(), "itemprop" => "description", "name" => "description", "property" => "og:description"]),
 					Html::rawElement("meta", ["content" => implode(",", array_merge([$this->getTitle()->getText()], $this->out->getCategories())), "itemprop" => "keywords", "name" => "keywords"]),
@@ -208,7 +209,7 @@
 					$result[] = Html::rawElement("meta", ["content" => $categories[0], "property" => "article:section"]);
 			}
 			return array_merge($result, [
-				Html::rawElement("link", ["href" => "//creativecommons.org/licenses/by-nc-sa/4.0/", "itemprop" => "license", "rel" => "code-license content-license license", "type" => "text/html"]),
+				Html::rawElement("link", ["href" => "//creativecommons.org/licenses/by-nc-sa/4.0/", "itemprop" => "license", "rel" => "code-license content-license", "type" => "text/html"]),
 				Html::rawElement("link", ["href" => "//horse.best", "rel" => "bestpony", "type" => "text/html"]),
 				Html::rawElement("script", ["async" => true, "type" => "application/ld+json"], json_encode($this->toObject(), JSON_UNESCAPED_SLASHES))
 			]);

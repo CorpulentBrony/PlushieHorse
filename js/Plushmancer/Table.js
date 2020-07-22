@@ -16,7 +16,7 @@ Plushie.addClassToNamespace(Plushie.Plushmancer, "Table", class Table {
 	get definedListboxes() { return Plushie.Utils.getPrivateProperty(this, "definedListboxes", () => this.listboxes.filter((listbox) => listbox instanceof Plushie.Plushmancer.Listbox)); }
 	get filteredColumnsList() { return Plushie.Utils.getPrivateProperty(this, "filteredColumnsList", () => this.getColumnListByDatasetProperty("filter")); }
 
-	get filterRowElement() { 
+	get filterRowElement() {
 		return Plushie.Utils.getPrivateProperty(this, "filterRowElement", () => {
 			const filterRowElement = window.document.getElementById(Table.FILTER_ROW_ID);
 			filterRowElement.setAttribute("role", "radiogroup row");
@@ -29,7 +29,7 @@ Plushie.addClassToNamespace(Plushie.Plushmancer, "Table", class Table {
 	get relevantColumnsList() { return Plushie.Utils.getPrivateProperty(this, "relevantColumnsList", () => Plushie.Utils.mergeSets(this.filteredColumnsList, this.sortableColumnsList)); }
 	get rows() { return Plushie.Utils.getPrivateProperty(this, "rows", () => new Table.RowCollection(this)); }
 	get sortableColumnsList() { return Plushie.Utils.getPrivateProperty(this, "sortableColumnsList", () => this.getColumnListByDatasetProperty("sort")); }
-	get sorters() { return Plushie.Utils.getPrivateProperty(this, "sorters", () => new Plushie.Plushmancer.Sorter.GroupCollection(this.sourceColumnCount, this.sortableColumnsList, this.filterRowElement)); }
+	get sorters() { return Plushie.Utils.getPrivateProperty(this, "sorters", () => new Plushie.Plushmancer.Sorter.GroupCollection(this.sourceColumnCount, this.sortableColumnsList, this.headerRow)); }
 
 	get sourceColumnCount() { return Plushie.Utils.getPrivateProperty(this, "sourceColumnCount", () => (this._element.rows.length > 0) ? this._element.rows.item(0).cells.length : 0) | 0; }
 
@@ -38,7 +38,7 @@ Plushie.addClassToNamespace(Plushie.Plushmancer, "Table", class Table {
 			this._tbody = false;
 
 			for (const row of this._element.rows)
-				if (row.id === Table.FILTER_ROW_ID || !window.Array.prototype.every.call(row.cells, (column) => column.tagName === "TD"))
+				if (row.id === Table.FILTER_ROW_ID || !self.Array.prototype.slice.call(row.cells, 1).every((column) => column.tagName === "TD"))
 					this.thead.appendChild(row);
 				else
 					break;
@@ -106,7 +106,7 @@ Plushie.addClassToNamespace(Plushie.Plushmancer, "Table", class Table {
 		this._element.removeAttribute("aria-busy");
 	}
 });
-window.Object.defineProperties(Plushie.Plushmancer.Table, { 
+window.Object.defineProperties(Plushie.Plushmancer.Table, {
 	LIST_ID: { enumerable: true, get: () => "PlushmancerListOutput" },
 	FILTER_ROW_ID: { enumerable: true, get: () => `${Plushie.Plushmancer.Table.LIST_ID}FilterRow` },
 	_getNumericDataset: { configurable: false, enumerable: false, writable: false }

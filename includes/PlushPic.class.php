@@ -6,11 +6,11 @@
 	class PlushPic {
 		private const CA_FILE = "/etc/pki/tls/certs/cacert.pem";
 		private const DEFAULT_COLOR = "#bbb";
-		private const DERPIBOORU_DOMAIN = "derpibooru.org";
-		private const DERPIBOORU_FILTER = 56027;
+		private const DERPIBOORU_DOMAIN = "twibooru.org";
+		private const DERPIBOORU_FILTER = 1;
 		private const DERPIBOORU_IMAGE_SIZE_MAX = 1280;
 		private const DERPIBOORU_PATH = "/search.json";
-		private const DERPIBOORU_SEARCH = "plushie,irl,safe,-human,-animated";
+		private const DERPIBOORU_SEARCH = "plushie,irl,safe,-human,-animated,is_optimized:true";
 		private const IMAGE_PROPERTIES = ["artist", "aspect_ratio", "height", "id", "index", "mime_type", "page", "representation", "source_url", "thumbnail", "width"];
 		private const IMAGE_CAPTION_ID = "PlushMainPageImageCaption";
 		private const IMAGE_TAG_ID = "PlushMainPageImageDisplay";
@@ -53,7 +53,7 @@
 		}
 
 		public function __toString(): string {
-			$imageUrl = substr($this->image->representation, 1);
+			$imageUrl = $this->image->representation;
 			// $result = Html::rawElement("a", ["href" => $imageUrl, "id" => self::IMAGE_TAG_ID, "rel" => "external", "style" => "background-image: url(" . $imageUrl . ");", "target" => "_blank"]) . PHP_EOL;
 
 			$result = Html::rawElement("img", [
@@ -85,7 +85,7 @@
 				return;
 			else if (!isset($this->image->thumbnail))
 				$this->image->thumbnail = str_replace("/large.", "/thumb_tiny.", $this->image->representation);
-			$blob = file_get_contents(self::PLUSHIE_URL . substr($this->image->thumbnail, 1));
+			$blob = file_get_contents(self::PLUSHIE_URL . substr($this->image->thumbnail, 7));
 			$imagick = new \Imagick();
 			$imagick->readImageBlob($blob);
 			unset($blob);
@@ -159,7 +159,7 @@
 		private function getCaptionHtml(): string {
 			if (!isset($this->image))
 				return "";
-			$derpibooru = Html::rawElement("span", ["itemprop" => "name"], "Derpibooru");
+			$derpibooru = Html::rawElement("span", ["itemprop" => "name"], "Twibooru");
 			$derpibooru = Html::rawElement("a", ["href" => self::DERPIBOORU_TOP_URL, "itemprop" => "url", "rel" => "external", "target" => "_blank"], $derpibooru);
 			$derpibooru = Html::rawElement("span", ["itemprop" => "publisher", "itemscope" => true, "itemtype" => "https://schema.org/Organization"], $derpibooru);
 			$hasArtist = isset($this->image->artist);
@@ -198,12 +198,12 @@
 		private function getSrcset(): string {
 			$result = substr(array_reduce(array_keys(self::DERPIBOORU_IMAGE_SIZES), function(string $result, string $name): string {
 				if ($this->image->width > self::DERPIBOORU_IMAGE_SIZES[$name])
-					return "{$result}," . substr(str_replace("/large.", "/{$name}.", $this->image->representation), 1) . " " . strval(self::DERPIBOORU_IMAGE_SIZES[$name]) . "w";
+					return "{$result}," . str_replace("/large.", "/{$name}.", $this->image->representation) . " " . strval(self::DERPIBOORU_IMAGE_SIZES[$name]) . "w";
 				return $result;
 			}, ""), 1);
 
 			if ($this->image->width > self::DERPIBOORU_IMAGE_SIZE_MAX)
-				return $result . "," . substr(str_replace("/large.", "/full.", $this->image->representation), 1) . " " . strval($this->image->width) . "w";
+				return $result . "," . str_replace("/large.", "/full.", $this->image->representation) . " " . strval($this->image->width) . "w";
 			return $result;
 		}
 	}

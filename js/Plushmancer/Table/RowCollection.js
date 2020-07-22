@@ -13,7 +13,7 @@ Plushie.checkForNamespace(Plushie.Plushmancer, "Table").RowCollection = class Ro
 		}, this);
 		window.Object.defineProperties(this, {
 			_unsorted: { enumerable: true, value: undefined, writable: true },
-			header: { enumerable: true, value: table.thead.rows.item(0) }
+			header: { enumerable: true, value: self.Array.prototype.find.call(table.thead.rows, (row) => row.id !== Plushie.Plushmancer.Table.FILTER_ROW_ID) }
 		});
 	}
 

@@ -9,7 +9,8 @@ Plushie.checkForNamespace(Plushie.Plushmancer, "Sorter").GroupCollection = class
 		super.fill(undefined).forEach((group, index) => {
 			if (sortableColumnsList.has(index)) {
 				this[index] = new this.static.parent.Group();
-				filterRow.cells.item(index).appendChild(this[index].value);
+				filterRow.cells.item(index).insertBefore(this[index].value, filterRow.cells.item(index).firstChild);
+				// filterRow.cells.item(index).appendChild(this[index].value);
 				this[index].addEventListener("sort", (event) => this.onSort(event, index));
 			} else
 				this[index] = false;
